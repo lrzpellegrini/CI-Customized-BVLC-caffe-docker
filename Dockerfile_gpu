@@ -1,0 +1,43 @@
+FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04@sha256:b3019fa14ee445007624ed30cdfcabf21b1fbd40c8ea559c9476a87dfcb69e06
+
+# nvidia-container-runtime
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+ENV NVIDIA_REQUIRE_CUDA "cuda>=9.0"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        ca-certificates \
+        wget && \
+	rm -rf /var/lib/apt/lists/*
+
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh -O ~/anaconda.sh && \
+    /bin/bash ~/anaconda.sh -b -p /opt/conda && rm ~/anaconda.sh
+
+ENV CAFFE_BUILD_ROOT=/opt/buildcaffe
+ENV CAFFE_ROOT=/opt/caffe
+WORKDIR $CAFFE_BUILD_ROOT
+
+ARG CONDA=/opt/conda/bin/conda
+
+ADD environment_for_gpu.yml .
+RUN $CONDA env create -f environment_for_gpu.yml
+
+ADD caffe $CAFFE_BUILD_ROOT
+
+RUN /bin/bash -c "source /opt/conda/bin/activate caffecustomenv && \
+	mkdir build && cd build && \
+    	cmake -DCMAKE_CXX_STANDARD=11 -DCMAKE_PREFIX_PATH=/opt/conda/envs/caffecustomenv -DCMAKE_INSTALL_PREFIX=/opt/caffe -DBUILD_python=TRUE -DBUILD_matlab=FALSE -DBUILD_docs=FALSE -DBUILD_python_layer=TRUE -DCPU_ONLY=FALSE -DUSE_CUDNN=1 -DUSE_NCCL=0 -Dpython_version=3 -DBLAS=open .. && \
+    	cmake --build . --target install -- -j$(nproc)"
+
+RUN rm -r $CAFFE_BUILD_ROOT
+ENV PYCAFFE_ROOT $CAFFE_ROOT/python
+ENV PYTHONPATH $PYCAFFE_ROOT:$PYTHONPATH
+ENV PATH $CAFFE_ROOT/build/tools:$PYCAFFE_ROOT:/opt/conda/bin:$PATH
+RUN echo "$CAFFE_ROOT/build/lib" >> /etc/ld.so.conf.d/caffe.conf && ldconfig
+
+RUN echo "source activate caffecustomenv" > ~/.bashrc
+ENV PATH /opt/conda/envs/caffecustomenv/bin:$PATH
+WORKDIR /opt/project
