@@ -23,7 +23,7 @@ WORKDIR $CAFFE_BUILD_ROOT
 ARG CONDA=/opt/conda/bin/conda
 
 ADD environment_for_gpu.yml .
-RUN $CONDA env create -f environment_for_gpu.yml
+RUN $CONDA env create -f environment_for_gpu.yml --override-channels -c conda-forge
 
 ADD caffe $CAFFE_BUILD_ROOT
 
