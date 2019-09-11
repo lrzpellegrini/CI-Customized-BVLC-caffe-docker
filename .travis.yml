@@ -31,15 +31,7 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: |
-      set -e
-      docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-      docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG
-      docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG_LATEST
-      docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG
-      docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_LATEST
-      docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:latest
-      set +e
+    script: docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" && docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG && docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG_LATEST && docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG && docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_LATEST && docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:latest
     on:
       repo: *official_repo
       branch: master
