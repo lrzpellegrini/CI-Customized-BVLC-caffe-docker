@@ -19,6 +19,7 @@ env:
 services:
   - docker
 script:
+  - set -e
   - docker build -t $CPU_IMAGE_TAG -f $CPU_IMAGE_DOCKERFILE .
   - docker tag $CPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG
   - docker tag $CPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG_LATEST
@@ -26,6 +27,7 @@ script:
   - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG
   - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_lATEST
   - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:latest
+  - set +e
 deploy:
   - provider: script
     skip_cleanup: true
