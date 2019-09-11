@@ -7,17 +7,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         ca-certificates \
         wget \
-        libgtk2.0-0 \
-        libatlas-base-dev \
-        libboost-all-dev \
-        libgflags-dev \
-        libgoogle-glog-dev \
-        libleveldb-dev \
-        liblmdb-dev \
-        libprotobuf-dev \
-        libsnappy-dev \
-        libpng12-dev \
-        protobuf-compiler && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh -O ~/anaconda.sh && \
@@ -30,7 +19,7 @@ WORKDIR $CAFFE_BUILD_ROOT
 ARG CONDA=/opt/conda/bin/conda
 
 ADD environment_for_cpu.yml .
-RUN $CONDA env create -f environment_for_cpu.yml
+RUN $CONDA env create -f environment_for_cpu.yml --override-channels -c conda-forge
 
 ADD caffe $CAFFE_BUILD_ROOT
 
