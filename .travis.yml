@@ -28,7 +28,7 @@ script:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: |>
+    script: |
       set -e
       docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
       docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG
