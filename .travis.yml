@@ -1,5 +1,6 @@
 os: linux
 dist: bionic
+language: bash
 official_repo: &official_repo
   'lrzpellegrini/CI-Customized-BVLC-caffe-docker'
 git:
@@ -18,23 +19,25 @@ env:
 services:
   - docker
 script:
-  - docker build -t $CPU_IMAGE_TAG -f $CPU_IMAGE_DOCKERFILE
+  - set -e
+  - docker build -t $CPU_IMAGE_TAG -f $CPU_IMAGE_DOCKERFILE .
   - docker tag $CPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG
   - docker tag $CPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG_LATEST
-  - docker build -t $GPU_IMAGE_TAG -f $GPU_IMAGE_DOCKERFILE
+  - docker build -t $GPU_IMAGE_TAG -f $GPU_IMAGE_DOCKERFILE .
   - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG
-  - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_lATEST
+  - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_LATEST
   - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:latest
+  - set +e
 deploy:
   - provider: script
     skip_cleanup: true
-    script: |>
+    script: |
       set -e
       docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
       docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG
       docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG_LATEST
       docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG
-      docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_lATEST
+      docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_LATEST
       docker push $DOCKER_USERNAME/$BASE_IMAGE_NAME:latest
       set +e
     on:
