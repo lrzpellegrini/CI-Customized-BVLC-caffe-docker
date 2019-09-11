@@ -1,6 +1,5 @@
 name: caffecustomenv
 channels:
-  - defaults
   - conda-forge
 dependencies:
   - _libgcc_mutex=0.1=main
@@ -141,5 +140,3 @@ dependencies:
   - yaml=0.1.7=h14c3975_1001
   - zlib=1.2.11=0
   - zstd=1.4.0=h3b9ef0a_0
-prefix: /home/lorenzo/miniconda3/envs/caffecustomenv
-
