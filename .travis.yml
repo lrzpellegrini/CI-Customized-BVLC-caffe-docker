@@ -20,9 +20,14 @@ services:
   - docker
 script:
   - set -e
+  - free -h
   - docker build -t $CPU_IMAGE_TAG -f $CPU_IMAGE_DOCKERFILE .
   - docker tag $CPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG
   - docker tag $CPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$CPU_IMAGE_TAG_LATEST
+  - free -h
+  - cd build_tests
+  - ./docker_cpu_tests.sh
+  - cd ..
   - docker build -t $GPU_IMAGE_TAG -f $GPU_IMAGE_DOCKERFILE .
   - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG
   - docker tag $GPU_IMAGE_TAG $DOCKER_USERNAME/$BASE_IMAGE_NAME:$GPU_IMAGE_TAG_LATEST
