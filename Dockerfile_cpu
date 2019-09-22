@@ -24,7 +24,7 @@ RUN $CONDA env create -f environment_for_cpu.yml
 ADD caffe $CAFFE_BUILD_ROOT
 
 RUN /bin/bash -c "source /opt/conda/bin/activate caffecustomenv && \
-	conda config --append channels conda-forge && \
+	conda config --add channels conda-forge && \
 	conda config --remove channels defaults && \
 	mkdir build && cd build && \
     	cmake -DCMAKE_CXX_STANDARD=11 -DCMAKE_PREFIX_PATH=/opt/conda/envs/caffecustomenv -DCMAKE_INSTALL_PREFIX=/opt/caffe -DBUILD_python=TRUE -DBUILD_matlab=FALSE -DBUILD_docs=FALSE -DBUILD_python_layer=TRUE -DCPU_ONLY=TRUE -Dpython_version=3 -DBLAS=open .. && \

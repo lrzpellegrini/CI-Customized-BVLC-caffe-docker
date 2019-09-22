@@ -8,9 +8,9 @@ dependencies:
   - boost=1.69.0=py36h8619c78_1001
   - boost-cpp=1.69.0=h11c811c_1000
   - bzip2=1.0.8=h516909a_1
-  - ca-certificates=2019.6.16=hecc5488_0
+  - ca-certificates=2019.9.11=hecc5488_0
   - cairo=1.16.0=h18b612c_1001
-  - certifi=2019.6.16=py36_1
+  - certifi=2019.9.11=py36_0
   - cloudpickle=1.2.2=py_0
   - curl=7.65.3=hf8cf82a_0
   - cycler=0.10.0=py_1
@@ -42,6 +42,7 @@ dependencies:
   - ipython_genutils=0.2.0=py_1
   - jasper=1.900.1=h07fcdf6_1006
   - jedi=0.15.1=py36_0
+  - joblib=0.13.2=py_0
   - jpeg=9c=h14c3975_1001
   - kiwisolver=1.1.0=py36hc9558a2_0
   - krb5=1.16.3=h05b26f9_1001
@@ -105,6 +106,7 @@ dependencies:
   - readline=8.0=hf8c457e_0
   - rhash=1.3.6=h14c3975_1001
   - scikit-image=0.15.0=py36hb3f55d8_2
+  - scikit-learn=0.21.3=py36hcdab131_0
   - scipy=1.3.1=py36h921218d_2
   - setuptools=41.2.0=py36_0
   - sip=4.19.8=py36hf484d3e_1000
@@ -133,3 +135,4 @@ dependencies:
   - yaml=0.1.7=h14c3975_1001
   - zlib=1.2.11=0
   - zstd=1.4.0=h3b9ef0a_0
+
