@@ -1,6 +1,5 @@
 FROM ubuntu:16.04
 
-# TODO: optimize apt packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
@@ -27,8 +26,8 @@ RUN /bin/bash -c "/opt/conda/bin/conda env create -f environment_for_cpu.yml && 
 	conda config --remove channels defaults && \
 	conda clean -afy && \
 	mkdir build && cd build && \
-    	cmake -DCMAKE_CXX_STANDARD=11 -DCMAKE_PREFIX_PATH=/opt/conda/envs/caffecustomenv -DCMAKE_INSTALL_PREFIX=/opt/caffe -DBUILD_python=TRUE -DBUILD_matlab=FALSE -DBUILD_docs=FALSE -DBUILD_python_layer=TRUE -DCPU_ONLY=TRUE -Dpython_version=3 -DBLAS=open .. && \
-    	cmake --build . --target install -- -j$(nproc)"
+    cmake -DCMAKE_CXX_STANDARD=11 -DCMAKE_PREFIX_PATH=/opt/conda/envs/caffecustomenv -DCMAKE_INSTALL_PREFIX=/opt/caffe -DBUILD_python=TRUE -DBUILD_matlab=FALSE -DBUILD_docs=FALSE -DBUILD_python_layer=TRUE -DCPU_ONLY=TRUE -Dpython_version=3 -DBLAS=open .. && \
+    cmake --build . --target install -- -j$(nproc)"
 
 RUN rm -r $CAFFE_BUILD_ROOT
 ENV PYCAFFE_ROOT $CAFFE_ROOT/python
