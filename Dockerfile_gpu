@@ -8,7 +8,6 @@ ENV NVIDIA_REQUIRE_CUDA "cuda>=9.0"
 RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         cmake \
-        git \
         ca-certificates \
         wget && \
 	rm -rf /var/lib/apt/lists/*
@@ -22,15 +21,19 @@ WORKDIR $CAFFE_BUILD_ROOT
 
 ARG CONDA=/opt/conda/bin/conda
 
-ADD environment_for_gpu.yml .
-RUN $CONDA env create -f environment_for_gpu.yml
-
 ADD caffe $CAFFE_BUILD_ROOT
 
-RUN /bin/bash -c "source /opt/conda/bin/activate caffecustomenv && \
+ADD environment_for_gpu.yml .
+#RUN $CONDA env create -f environment_for_gpu.yml
+
+RUN /bin/bash -c "/opt/conda/bin/conda env create -f environment_for_gpu.yml && \
+	source /opt/conda/bin/activate caffecustomenv && \
+    conda config --add channels conda-forge && \
+	conda config --remove channels defaults && \
+    conda clean -afy && \
 	mkdir build && cd build && \
-    	cmake -DCMAKE_CXX_STANDARD=11 -DCMAKE_PREFIX_PATH=/opt/conda/envs/caffecustomenv -DCMAKE_INSTALL_PREFIX=/opt/caffe -DBUILD_python=TRUE -DBUILD_matlab=FALSE -DBUILD_docs=FALSE -DBUILD_python_layer=TRUE -DCPU_ONLY=FALSE -DUSE_CUDNN=1 -DUSE_NCCL=0 -Dpython_version=3 -DBLAS=open .. && \
-    	cmake --build . --target install -- -j$(nproc)"
+    cmake -DCMAKE_CXX_STANDARD=11 -DCMAKE_PREFIX_PATH=/opt/conda/envs/caffecustomenv -DCMAKE_INSTALL_PREFIX=/opt/caffe -DBUILD_python=TRUE -DBUILD_matlab=FALSE -DBUILD_docs=FALSE -DBUILD_python_layer=TRUE -DCPU_ONLY=FALSE -DUSE_CUDNN=1 -DUSE_NCCL=0 -Dpython_version=3 -DBLAS=open .. && \
+    cmake --build . --target install -- -j$(nproc)"
 
 RUN rm -r $CAFFE_BUILD_ROOT
 ENV PYCAFFE_ROOT $CAFFE_ROOT/python
